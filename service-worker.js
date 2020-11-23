@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/billboardify/precache-manifest.9044f86cf9b02576107a36042cbca024.js"
+  "/billboardify/precache-manifest.538405565a131543d76dee1c8feb2319.js"
 );
 
 workbox.clientsClaim();
