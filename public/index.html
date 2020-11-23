@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, width=device-width">
+    <meta name="theme-color" content="#C6E1DC">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <link rel="apple-touch-icon" href="app-icon.png">
+    <link rel="icon" href="app-icon.png">
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
+    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
+    <title>Billboardify</title>
+
+    <meta name="description" content="Create Spotify playlists from past Billboard chart-toppers!">
+    <meta property="og:url" content="https://kyleschan.github.io/billboardify" />
+    <meta property="og:title" content="Billboardify" />
+    <meta property="og:image" content="https://kyleschan.github.io/billboardify/icon.png" />
+    <meta property="og:description" content="Rediscover Past Billboard Chart Hits!" />
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-121860779-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-121860779-1');
+    </script>
+  </head>
+  <body>
+    <span id="root"></span>
+
+    <!-- script for hosting SPA in gh-pages-->
+    <script type="text/javascript">
+      (function(l) {
+        if (l.search) {
+          var q = {};
+          l.search.slice(1).split('&').forEach(function(v) {
+            var a = v.split('=');
+            q[a[0]] = a.slice(1).join('=').replace(/~and~/g, '&');
+          });
+          if (q.p !== undefined) {
+            window.history.replaceState(null, null,
+              l.pathname.slice(0, -1) + (q.p || '') +
+              (q.q ? ('?' + q.q) : '') +
+              l.hash
+            );
+          }
+        }
+      }(window.location))
+    </script>
+  </body>
+</html>

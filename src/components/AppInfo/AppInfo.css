@@ -1,0 +1,14 @@
+.app-info {
+  display: block;
+  max-width: 615.2px;
+  margin: 0 auto;
+  animation: mic-drop 0.75s; }
+
+.app-info__buttons {
+  margin: 2em 0; }
+
+.scope-list li {
+  font-weight: bold; }
+
+.app-info__logo {
+  text-align: left; }
