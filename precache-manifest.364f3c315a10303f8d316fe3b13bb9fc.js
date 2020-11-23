@@ -1,11 +1,11 @@
 self.__precacheManifest = [
   {
-    "revision": "f6f5cbeb549c6e0747a5",
-    "url": "/billboardify/static/css/main.f39b4ad3.chunk.css"
+    "revision": "9663c89b7c42182ebe42",
+    "url": "/billboardify/static/css/main.c1f3829c.chunk.css"
   },
   {
-    "revision": "f6f5cbeb549c6e0747a5",
-    "url": "/billboardify/static/js/main.a1691041.chunk.js"
+    "revision": "9663c89b7c42182ebe42",
+    "url": "/billboardify/static/js/main.549248e0.chunk.js"
   },
   {
     "revision": "12b15fe4403acabd28e3",
@@ -28,11 +28,11 @@ self.__precacheManifest = [
     "url": "/billboardify/static/media/bb-placeholder.cdedb10b.jpg"
   },
   {
-    "revision": "e0c8670a4bedbea4e9e17d867d531ee4",
-    "url": "/billboardify/static/media/discover.e0c8670a.jpg"
+    "revision": "1b1b15a185e5bf4d30dc326035a23d1e",
+    "url": "/billboardify/static/media/discover.1b1b15a1.jpg"
   },
   {
-    "revision": "db7a8ab5f0a6327e816ce65503bd9f33",
+    "revision": "0af128a947ade16bc0eb16706063e7ac",
     "url": "/billboardify/index.html"
   }
 ];
