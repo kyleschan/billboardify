@@ -32,10 +32,21 @@ class Apphelp extends Component {
             <a href="http://accounts.spotify.com/" target="_blank" rel="noopener noreferrer">
               accounts.spotify.com
             </a>{' '}
-            and press "Log Out". To sign in with a different account, open{' '}
-            <a href="https://kyleschan.github.io/billboardify/login">https://kyleschan.github.io/billboardify/login</a>{' '}
-            and sign in with different
-            account.
+            and press "Log Out". To sign back in with a different account, click the door icon in the nav bar on the left
+            (at the bottom on mobile) to log out and sign in with a different account.
+          </p>
+          <h3>
+            Why do random songs appear at the top of the list sometimes?
+          </h3>
+          <p>
+            It's a visual bug that only occasionally happens with songs that aren't on Spotify, and it doesn't affect the
+            playlist that's saved.  A fix is currently being worked on!
+          </p>
+          <h3>
+            Is this project open source?
+          </h3>
+          <p>
+            Yes it is!  Clicking the GitHub logo below will take you to the repo.
           </p>
           <div className="app-help__footer">
             <a
