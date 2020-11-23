@@ -1,10 +1,10 @@
 self.__precacheManifest = [
   {
-    "revision": "e8b3413334a10f7ea81f",
-    "url": "/billboardify/static/css/main.a8e2c948.chunk.css"
+    "revision": "56ce343442cf2521d48d",
+    "url": "/billboardify/static/css/main.f870e7d0.chunk.css"
   },
   {
-    "revision": "e8b3413334a10f7ea81f",
+    "revision": "56ce343442cf2521d48d",
     "url": "/billboardify/static/js/main.b18f4bdd.chunk.js"
   },
   {
@@ -32,7 +32,7 @@ self.__precacheManifest = [
     "url": "/billboardify/static/media/discover.e0c8670a.jpg"
   },
   {
-    "revision": "a08a6e9a57e93b9db8021c77a8dbff9b",
+    "revision": "a2f7f1a90f618e5c76ac0a8f769b59cb",
     "url": "/billboardify/index.html"
   }
 ];
