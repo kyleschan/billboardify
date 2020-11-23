@@ -27,7 +27,7 @@
   z-index: 2;
   color: #3a354e;
   top: 1.15vw;
-  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-width: 0.5px;
   -webkit-text-stroke-color: white; }
 
 .list-page__content {
