@@ -13,7 +13,6 @@ Billboardify uses the following parts of the Spotify Web API
 - [Creating playlist](https://developer.spotify.com/documentation/web-api/reference/playlists/create-playlist/)
 - [Adding tracks to playlist](https://developer.spotify.com/documentation/web-api/reference/playlists/add-tracks-to-playlist/)
 
-
 ## MongoDB
 
 Billboardify uses MongoDB Realm and Atlas to store Billboard Top 50 information, and uses the Anonymous authentication provider to access data.
@@ -22,6 +21,13 @@ Billboardify uses MongoDB Realm and Atlas to store Billboard Top 50 information,
 - [MongoDB Atlas](https://docs.atlas.mongodb.com/)
 - [Anonymous authentication provider](https://docs.mongodb.com/realm/authentication/anonymous/)
 
+## Python Web Scraper
+
+The Billboard data used by Billboardify was obtained using Python.  The only 3rd party packages necessary are Spotipy and lxml.
+All project data is in the `data` folder of the repo.
+
+- Install requirements from project root directory `pip install -r requirements.txt`
+- Run the scraper to build your own dataset from scratch `python scraper.py`
 
 ## Development
 - Clone the repository `git clone https://github.com/kyleschan/billboardify.git`
