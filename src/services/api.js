@@ -8,13 +8,7 @@ import { getCurrentPathName } from '../concepts/route';
 
 const getAccessToken = () => localStorage.get('accessToken');
 
-const getAuthHeader = token => {
-  if (token) {
-    return { Authorization: `Bearer ${token}` };
-  }
-
-  return {};
-};
+const getAuthHeader = token => ( token ? {Authorization: `Bearer ${token}`} : {});
 
 const isUnauthorized = status => status === 401;
 const redirectToLogin = () => (dispatch, getState) => {

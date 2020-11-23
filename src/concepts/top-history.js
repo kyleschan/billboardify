@@ -1,13 +1,13 @@
 // # Play history concept
 
-import { fromJS } from 'immutable';
+import { fromJS, Map } from 'immutable';
 import { createSelector } from 'reselect';
 
 import { getTop50 }  from '../services/mongodb';
-import config from '../config';
 
 // # Action Types
-const FETCH_TOP_HISTORY_SUCCESS = 'history/FETCH_TOP_HISTORY_SUCCESS';
+const CLEAR_TOP_50 = 'history/CLEAR_TOP_50';
+const FETCH_TOP_50_SUCCESS = 'history/FETCH_TOP_50_SUCCESS';
 
 const SET_DATE = 'history/SET_DATE';
 
@@ -32,12 +32,13 @@ export const getTrackImages = createSelector(getTopTracks, tracks =>
 // # Action Creators
 export const fetchTop = () => (dispatch, getState) => {
   const date = getDate(getState());
-  getTop50(date, config.REALM_KEY).then((value) =>
-  dispatch(
-    {type: FETCH_TOP_HISTORY_SUCCESS,
-     payload: value
-    }
-  ));
+  getTop50(date).then((items) => {
+    dispatch({type: CLEAR_TOP_50});
+    dispatch(
+      {type: FETCH_TOP_50_SUCCESS,
+      payload: items
+      });
+  });
 };
 
 export const fetchTopHistory = () => dispatch => dispatch(fetchTop());
@@ -56,8 +57,12 @@ const initialState = fromJS({
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
+    case CLEAR_TOP_50: {
+      // Fill tracks
+      return state.set('tracks', Map());
+    }
 
-    case FETCH_TOP_HISTORY_SUCCESS: {
+    case FETCH_TOP_50_SUCCESS: {
       // Fill tracks
       return state.set('tracks', fromJS(action.payload));
     }

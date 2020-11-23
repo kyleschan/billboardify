@@ -1,4 +1,4 @@
 export default {
     SPOTIFY_CLIENT_ID: '11350c12c94648f5b300ecb1a560216a',
-    REALM_KEY: '9wKqV6vHNSDljmkwx8YQm6TAywUowkp4ATAQuFrO2aHmxli72Yx1IcfP9el0FRSD'
+    REALM_APP_ID: 'playlist-app-ectuj'
 };

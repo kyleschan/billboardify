@@ -16,8 +16,8 @@ class PlaylistPopup extends Component {
     return (
       <Modal>
         <div className="playlist-popup">
-          <h3 className="playlist-popup__title">Yeah!</h3>
-          <p className="playlist-popup__info">Your new Playlist is now available in Spotify.</p>
+          <h3 className="playlist-popup__title">Hooray!</h3>
+          <p className="playlist-popup__info">Your new playlist is now available in your Spotify account.</p>
           <div className="save-form-success">
             {!!playlistImage && (
               <a

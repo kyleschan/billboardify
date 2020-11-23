@@ -29,14 +29,14 @@ const TopHistory = ({
             <TopHistoryTrack
               orderNumber={index + 1}
               track={track}
-              key={track.get('track_info')}
+              key={`${index}`}
             />
           ))}
 
         {topHistory.get('tracks').size > 0 && (
           <ListActionPanel
             title="Create a Playlist"
-            description={`This creates a playlist from the current Top-50 tracks (if available on Spotify).`}
+            description={`This creates a playlist from the selected week's Top 50 (if available on Spotify).`}
             onActionClick={createTracksPlaylist}
           />
         )}

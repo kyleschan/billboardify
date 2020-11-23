@@ -10,10 +10,10 @@ const appConfig = {
 const app = new Realm.App(appConfig);
 
 
-const loginApiKey = async apiKey => {
+const loginAnonymous = async () => {
   var assert = require('assert');
   // Create API Key credentials
-  const credentials = Realm.Credentials.apiKey(apiKey);
+  const credentials = Realm.Credentials.anonymous();
   try {
     // Authenticate the user
     const user = await app.logIn(credentials);
@@ -56,9 +56,9 @@ const getTrackInfo = async (trackInfoCollection, item) => {
 }
 
 
-export const getTop50 = async (date, key) => {
+export const getTop50 = async (date) => {
   try {
-    const user = await loginApiKey(key);
+    const user = await loginAnonymous();
     console.log("Successfully logged in!")
     const mongo = user.mongoClient("mongodb-atlas");
     const rankingCollection = mongo.db("data").collection("billboard_rankings");

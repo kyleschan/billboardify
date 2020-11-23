@@ -10,7 +10,7 @@ export default () => (
       <span className="navigation__label">App Info</span>
     </NavLink>
     <NavLink activeClassName="active" className="App-navigation__link" to="/top-tracks">
-      <span class="icon ion-android-favorite-outline"> </span>
+      <span class="icon ion-podium"> </span>
       <span className="navigation__label">Top 50</span>
     </NavLink>
     <NavLink activeClassName="active" className="App-navigation__link" to="/login">

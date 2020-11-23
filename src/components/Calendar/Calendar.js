@@ -3,8 +3,6 @@ import moment from "moment";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-import {adjustDate, dateString} from '../../concepts/calendar';
-
 const BEG_DATE = '1980-01-02';
 
 // CSS Modules, react-datepicker-cssmodules.css
