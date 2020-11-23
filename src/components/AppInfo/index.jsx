@@ -20,7 +20,7 @@ class AppInfo extends Component {
           </p>
           <h3>Required Spotify access</h3>
           <p>
-            Billboardify requires access to your Spotify account. It uses the Spotify Implicit Grant Flow
+            Billboardify requires access to your Spotify account to save playlists. It uses the Spotify Implicit Grant Flow
             for user authorization. The app is client-side only, and your Spotify data is
             not stored in any server. For more information on the login procedure, visit this {' '}
             <a href="https://developer.spotify.com/documentation/general/guides/authorization-guide/#implicit-grant-flow" target="_blank" rel="noopener noreferrer">

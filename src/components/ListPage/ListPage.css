@@ -28,7 +28,7 @@
   color: #3a354e;
   top: 1.15vw;
   -webkit-text-stroke-width: 0.5px;
-  -webkit-text-stroke-color: white; }
+  -webkit-text-stroke-color: rgba(255, 255, 255, 0.281); }
 
 .list-page__content {
   position: relative;

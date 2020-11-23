@@ -15,9 +15,10 @@ class Apphelp extends Component {
             Refresh your memories by exploring each week's Top 50, and create Spotify
             playlists from your favorite weeks!
           </p>
-          <h3>Spotify access</h3>
+          <h2>FAQ</h2>
+          <h3>Why do you need access to my Spotify account?</h3>
           <p>
-            Billboardify requires a Spotify account. Account access is client-side only and
+            Billboardify requires a Spotify account to save playlists. Account access is client-side only and
             secured by the OAuth 2 authentication protocol, and
             your Spotify data is not stored.  For more information on the login procedure, visit this {' '}
             <a href="https://developer.spotify.com/documentation/general/guides/authorization-guide/#implicit-grant-flow" target="_blank" rel="noopener noreferrer">
@@ -32,14 +33,14 @@ class Apphelp extends Component {
             <a href="http://accounts.spotify.com/" target="_blank" rel="noopener noreferrer">
               accounts.spotify.com
             </a>{' '}
-            and press "Log Out". To sign back in with a different account, click the door icon in the nav bar on the left
+            and click "Log Out". To sign back in with a different account, click the icon labeled "Logout" in the nav bar on the left
             (at the bottom on mobile) to log out and sign in with a different account.
           </p>
           <h3>
             Why do random songs appear at the top of the list sometimes?
           </h3>
           <p>
-            It's a visual bug that only occasionally happens with songs that aren't on Spotify, and it doesn't affect the
+            It's a visual bug that only occasionally happens with songs that aren't on Spotify, and it doesn't appear in the
             playlist that's saved.  A fix is currently being worked on!
           </p>
           <h3>
