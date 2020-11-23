@@ -1,12 +1,13 @@
 // # Play history concept
 
-import { fromJS } from 'immutable';
+import { fromJS, Map } from 'immutable';
 import { createSelector } from 'reselect';
 
 import { getTop50 }  from '../services/mongodb';
 import config from '../config';
 
 // # Action Types
+const FETCH_TOP_HISTORY = 'history/FETCH_TOP_HISTORY';
 const FETCH_TOP_HISTORY_SUCCESS = 'history/FETCH_TOP_HISTORY_SUCCESS';
 
 const SET_DATE = 'history/SET_DATE';
@@ -34,7 +35,7 @@ export const fetchTop = () => (dispatch, getState) => {
   const date = getDate(getState());
   getTop50(date, config.REALM_KEY).then((value) =>
   dispatch(
-    {type: FETCH_TOP_HISTORY_SUCCESS,
+    {type: FETCH_TOP_HISTORY,
      payload: value
     }
   ));
@@ -56,8 +57,14 @@ const initialState = fromJS({
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
-    case FETCH_TOP_HISTORY_SUCCESS: {
+
+    case FETCH_TOP_HISTORY: {
       // Clear on fetch
+      return state.set('tracks', Map());
+    }
+
+    case FETCH_TOP_HISTORY_SUCCESS: {
+      // Fill tracks
       return state.set('tracks', fromJS(action.payload));
     }
 
