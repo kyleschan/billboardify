@@ -33,7 +33,7 @@ class Apphelp extends Component {
               accounts.spotify.com
             </a>{' '}
             and press "Log Out". To sign in with a different account, open{' '}
-            <a href="https://kyleschan.github.io/billboardify/login">https://kyleschan.github.io/billboardify/login</a>
+            <a href="https://kyleschan.github.io/billboardify/login">https://kyleschan.github.io/billboardify/login</a>{' '}
             and sign in with different
             account.
           </p>

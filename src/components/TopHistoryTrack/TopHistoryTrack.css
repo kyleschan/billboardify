@@ -141,6 +141,20 @@
   text-align: left;
   flex: 1; }
 
+.artist__genres {
+  color: #aba5c3;
+  text-align: left;
+  font-size: 0.7em;
+  text-transform: capitalize; }
+
+.order-number {
+  flex: 12px 0 0;
+  text-align: right;
+  margin-right: 20px;
+  font-weight: bold;
+  color: #aba5c3;
+  font-size: 1em; }
+
 @media (min-width: 769px) {
   .track-history__item {
     padding: 1em 1.5em;

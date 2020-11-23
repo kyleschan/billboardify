@@ -22,6 +22,12 @@
   padding-bottom: 0.5em;
   top: -1.15vw; }
 
+.list-page__subtitle {
+  position: relative;
+  z-index: 2;
+  color: #3a354e;
+  top: 1.15vw; }
+
 .list-page__content {
   position: relative;
   z-index: 3;
@@ -29,19 +35,6 @@
   min-height: 100px;
   margin: 0 -1.5em;
   padding: 20px 1.5em; }
-  .list-page__content:before {
-    content: '';
-    display: block;
-    position: absolute;
-    left: 0;
-    right: 0;
-    overflow-x: hidden;
-    top: -7vw;
-    height: 10vw;
-    background: #fff;
-    z-index: 3;
-    transform: translate3d(0, 0, 0) skewY(-3deg);
-    outline: 1px solid transparent; }
 
 .list-page__list {
   position: relative;
