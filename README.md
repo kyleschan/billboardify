@@ -24,10 +24,10 @@ Billboardify uses MongoDB Realm and Atlas to store Billboard Top 50 information,
 
 
 ## Development
-- `git clone https://github.com/kyleschan/billboardify.git`
-- `yarn install`
-- `cd billboardify`
-- `yarn start`
+- Clone the repository `git clone https://github.com/kyleschan/billboardify.git`
+- Install necessary npm/yarn packages `yarn install`
+- Switch to root directory `cd billboardify`
+- Run development server on localhost:3000 `yarn start`
 
 Billboardify is built on [create-react-app](https://github.com/facebook/create-react-app)
 
@@ -36,7 +36,11 @@ Billboardify is built on [create-react-app](https://github.com/facebook/create-r
 **Concert**
 Photo by [Aditya Chinchure](https://unsplash.com/photos/ZhQCZjr9fHo) on [Unsplash](https://unsplash.com/)
 
+**Vinyl**
+Photo by [Georgios Kaleadis](https://unsplash.com/photos/aBTfTMsOCOI) on [Unsplash](https://unsplash.com/)
+
 
 ## License
 MIT
+
 Thanks to [Replayify](https://github.com/palampinen/replayify/tree/master/src) for their styling!
