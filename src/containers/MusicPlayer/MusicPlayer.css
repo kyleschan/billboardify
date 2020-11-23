@@ -1,7 +1,7 @@
 .music-player {
   text-align: left;
   padding: 0 54px;
-  background: linear-gradient(120deg, #f9adac, #9ee2d9);
+  background: linear-gradient(120deg, #1ed760, #1ed760);
   background: #f7f7f7;
   animation: flash-from-bottom 0.5s;
   overflow: hidden;
