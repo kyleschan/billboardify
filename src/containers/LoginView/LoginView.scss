@@ -3,7 +3,7 @@
 .login {
   text-align: left;
   padding: 0 2em;
-  background: $brand-pink;
+  background: $brand-green;
 
   overflow: hidden;
   display: flex;
@@ -19,8 +19,8 @@
 
 .login__title {
   color: #fff;
-  margin: 10vh 0 50vh;
-  padding: 0;
+  margin: 10vh 0 0;
+  padding: 33vh 0;
 }
 
 .login__app-icon {
@@ -96,14 +96,14 @@
     overflow-y: auto;
   }
   .login__title {
-    margin-bottom: 45vh;
+    margin-bottom: -5vh;
   }
 }
 
 @media (min-width: $breakpoint-small) and (orientation: landscape) {
   .login__title {
     color: #fff;
-    margin: 10vh 0 65vh;
+    margin: 10vh 0 -5vh;
   }
   .btn-link {
     text-align: center;

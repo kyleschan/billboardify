@@ -57,7 +57,7 @@
     position: absolute;
     font-size: 70px;
     line-height: 1;
-    color: #9ee2d9;
+    color: #1ed760;
     left: 50%;
     top: 50%;
     width: 70px;
@@ -93,7 +93,7 @@
     z-index: 2;
     stroke-dasharray: 452;
     stroke-dashoffset: 0;
-    stroke: #9ee2d9;
+    stroke: #1ed760;
     stroke-width: 6;
     animation: round 0.6s ease;
     animation-fill-mode: forwards; }

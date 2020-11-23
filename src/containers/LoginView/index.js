@@ -18,7 +18,7 @@ class LoginView extends Component {
       <span>
         <div className="login">
           <div className="login__content">
-            <h1 className="login__title">Save past Billboard charts to Spotify!</h1>
+            <h1 className="login__title">Save Billboard charts to Spotify!</h1>
             <button className="btn btn-primary btn-login" onClick={this.props.authorizeUser}>
               Sign in with Spotify
             </button>

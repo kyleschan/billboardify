@@ -63,23 +63,23 @@
     box-shadow: 0 12px 22px rgba(0, 0, 0, 0.1); }
 
 .btn-primary {
-  color: #f9adac;
+  color: #1ed760;
   background-color: #fff;
   border-color: #fff; }
   .btn-primary:focus {
-    color: #f9adac;
+    color: #1ed760;
     background-color: #f7f7f7;
     border-color: #f7f7f7; }
   .btn-primary:hover {
-    color: #f9adac;
+    color: #1ed760;
     background-color: #f7f7f7;
     border-color: #f7f7f7; }
   .btn-primary:active {
-    color: #f9adac;
+    color: #1ed760;
     background-color: #f0f0f0;
     border-color: #f0f0f0; }
     .btn-primary:active:hover, .btn-primary:active:focus {
-      color: #f9adac;
+      color: #1ed760;
       background-color: #f0f0f0;
       border-color: #f0f0f0; }
   .btn-primary:active {
@@ -90,7 +90,7 @@
   .btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary:active:hover, .btn-primary:active:focus {
     background-color: #fff; }
   .btn-primary:active {
-    color: #f7918f; }
+    color: #1abc54; }
 
 .btn-default {
   color: #50496d;
@@ -124,29 +124,29 @@
 
 .btn-secondary {
   color: #fff;
-  background-color: #9ee2d9;
-  border-color: #9ee2d9; }
+  background-color: #1ed760;
+  border-color: #1ed760; }
   .btn-secondary:focus {
     color: #fff;
-    background-color: #92ded4;
-    border-color: #92ded4; }
+    background-color: #1cca5a;
+    border-color: #1cca5a; }
   .btn-secondary:hover {
     color: #fff;
-    background-color: #92ded4;
-    border-color: #92ded4; }
+    background-color: #1cca5a;
+    border-color: #1cca5a; }
   .btn-secondary:active {
     color: #fff;
-    background-color: #86dbd0;
-    border-color: #86dbd0; }
+    background-color: #1abc54;
+    border-color: #1abc54; }
     .btn-secondary:active:hover, .btn-secondary:active:focus {
       color: #fff;
-      background-color: #86dbd0;
-      border-color: #86dbd0; }
+      background-color: #1abc54;
+      border-color: #1abc54; }
   .btn-secondary:active {
     background-image: none; }
   .btn-secondary[disabled]:hover, .btn-secondary[disabled]:focus, .btn-secondary[disabled].focus {
-    background-color: #9ee2d9;
-    border-color: #9ee2d9; }
+    background-color: #1ed760;
+    border-color: #1ed760; }
 
 .btn-dark {
   color: #fff;

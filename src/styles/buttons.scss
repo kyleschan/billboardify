@@ -79,8 +79,8 @@
 }
 
 .btn-primary {
-  @include button-theme($brand-pink, #fff, #fff);
-  @include white-bg-button($brand-pink);
+  @include button-theme($brand-green, #fff, #fff);
+  @include white-bg-button($brand-green);
 }
 
 .btn-default {
