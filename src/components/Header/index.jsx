@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import classnames from 'classnames';
-import AppIcon from '../AppIcon';
 
 import './Header.css';
 
@@ -39,7 +38,6 @@ class Header extends Component {
     return (
       <header className={classnames('header', { 'header--scrolled': !isOnTop })}>
         <div className="container">
-          {/*<AppIcon theme="white" />*/}
           <div />
 
           <div className="header__user">
