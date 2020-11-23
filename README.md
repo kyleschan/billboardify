@@ -36,6 +36,8 @@ Billboardify is built on [create-react-app](https://github.com/facebook/create-r
 **Concert**
 Photo by [Aditya Chinchure](https://unsplash.com/photos/ZhQCZjr9fHo) on [Unsplash](https://unsplash.com/)
 
+Photo by [Georgios Kaleadis](https://unsplash.com/photos/aBTfTMsOCOI) on [Unsplash](https://unsplash.com/)
+
 
 ## License
 MIT
