@@ -27,6 +27,7 @@ The Billboard data used by Billboardify was obtained using Python.  The only 3rd
 All project data is in the `data` folder of the repo.
 
 - Install requirements from project root directory `pip install -r requirements.txt`
+- Navigate to scraper folder `cd ./data/scraper`
 - Run the scraper to build your own dataset from scratch `python scraper.py`
 
 ## Development
