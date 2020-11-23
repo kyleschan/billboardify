@@ -1,5 +1,5 @@
 {
-  "main.css": "/billboardify/static/css/main.cef3796c.chunk.css",
+  "main.css": "/billboardify/static/css/main.3e97f008.chunk.css",
   "main.js": "/billboardify/static/js/main.e5266a3b.chunk.js",
   "main.js.map": "/billboardify/static/js/main.e5266a3b.chunk.js.map",
   "runtime~main.js": "/billboardify/static/js/runtime~main.73cf3935.js",
@@ -8,10 +8,10 @@
   "static/js/2.c355c915.chunk.js": "/billboardify/static/js/2.c355c915.chunk.js",
   "static/js/2.c355c915.chunk.js.map": "/billboardify/static/js/2.c355c915.chunk.js.map",
   "index.html": "/billboardify/index.html",
-  "precache-manifest.a66fd4b0e32e36a2a95b3b821f395eca.js": "/billboardify/precache-manifest.a66fd4b0e32e36a2a95b3b821f395eca.js",
+  "precache-manifest.76a83479f9ae19628d2e722bfe7ba650.js": "/billboardify/precache-manifest.76a83479f9ae19628d2e722bfe7ba650.js",
   "service-worker.js": "/billboardify/service-worker.js",
   "static/css/2.447216ae.chunk.css.map": "/billboardify/static/css/2.447216ae.chunk.css.map",
-  "static/css/main.cef3796c.chunk.css.map": "/billboardify/static/css/main.cef3796c.chunk.css.map",
+  "static/css/main.3e97f008.chunk.css.map": "/billboardify/static/css/main.3e97f008.chunk.css.map",
   "static/media/bb-placeholder.jpg": "/billboardify/static/media/bb-placeholder.cdedb10b.jpg",
   "static/media/LoginView.css": "/billboardify/static/media/discover.e0c8670a.jpg",
   "static/media/top-tracks.jpg": "/billboardify/static/media/top-tracks.ebc6b10d.jpg"
