@@ -38,6 +38,11 @@ All project data is in the `data` folder of the repo.
 
 Billboardify is built on [create-react-app](https://github.com/facebook/create-react-app)
 
+## Deployment
+- Billboardify is deployed on Github Pages using [this tutorial](https://create-react-app.dev/docs/deployment/#github-pages-https-pagesgithubcom)
+- After following the steps in the tutorial above, switch to project root `cd billboardify`
+- Run `yarn run deploy`
+
 ## Photo Credits
 
 **Concert**
