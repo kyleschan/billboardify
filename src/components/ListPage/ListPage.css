@@ -87,7 +87,7 @@
     animation: none; }
   .list-page__content {
     margin: 0 -1.5em;
-    padding: 35px 2em; }
+    padding: 0px 2em; }
     .list-page__content:before {
       top: -25px;
       height: 45px;
