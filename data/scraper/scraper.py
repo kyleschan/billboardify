@@ -3,6 +3,7 @@ import datetime
 import glob
 import json
 import os
+import pickle
 import re
 import requests
 from requests.adapters import HTTPAdapter
@@ -12,6 +13,7 @@ from requests.packages.urllib3.util.retry import Retry
 from lxml import html
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
+from pymongo import MongoClient
 
 
 PARENTH = r'\([^)]*\)'
@@ -165,8 +167,9 @@ def build_dataset(start_date: datetime.date,
                   top_k: int = 50,
                   day_of_the_week: int = None) -> dict:
     
+    dataset = historical_data if historical_data is not None else {}
     # Historical data must be a valid dataset
-    if len(historical_data) > 0 and not valid_dataset(historical_data):
+    if len(dataset) > 0 and not valid_dataset(dataset):
         print('Historical data must be a valid dataset')
         raise InvalidInputException
 
@@ -181,8 +184,7 @@ def build_dataset(start_date: datetime.date,
         raise InvalidInputException
 
     # Either extend or refresh the historical data
-    dataset = historical_data if historical_data is not None else {}
-    if len(historical_data) > 0:
+    if len(dataset) > 0:
         index = 0 if refresh else -1
         first_week = datetime.date.fromisoformat(list(dataset)[index])
         if refresh and first_week < start_date:
@@ -501,6 +503,59 @@ def valid_spotify_info(spotify_info_dict: dict) -> bool:
     # Passed all checks; valid spotify info
     return True
 
+def update_mongo():
+
+    # Get latest week's Top 50
+    misses = []
+    new_data = build_dataset(historical_data=None,
+                             start_date=datetime.date.today(),
+                             end_date=datetime.date.today(),
+                             spotify_client=spotify,
+                             http_session=http,
+                             refresh=False,
+                             debug=True,
+                             record_misses_list=misses,
+                             top_k=50,
+                             day_of_the_week=2)
+
+    most_recent_date = list(new_data)[-1]
+
+    # Prep result for mongodb upload
+    mongo_new_data = {'_id': most_recent_date,
+                      'ranking': new_data[most_recent_date]}
+
+    new_uris = get_unique_uris(new_data)
+
+    # Determine which uris are new
+    with open('../json_files/unique_uris.pickle', 'rb') as f:
+        uris = pickle.load(f)
+    input_uris = new_uris - uris
+    uris = uris | input_uris
+    with open('../json_files/unique_uris.pickle', 'wb') as f:
+        pickle.dump(uris, f)
+
+    # Get info for those new uris and prep for mongodb upload
+    new_spotify_info = get_spotify_info(input_uris,
+                                        artist_info=True,
+                                        audio_features=True)
+
+    mongo_new_spotify_info = get_mongo_spotify_info(new_spotify_info)
+
+    # Upload results to mongodb
+    client = MongoClient('CONNECTION STRING HERE')
+    db = client.data
+    spotify_info = db.spotify_info
+    billboard_rankings = db.billboard_rankings
+    spotify_info.insert_many(get_mongo_spotify_info(new_spotify_info))
+    billboard_rankings.insert_one(mongo_new_data)
+
+    # Update and save query misses
+    with open('../json_files/query_misses.json') as f:
+        query_misses = json.load(f)
+    query_misses += misses[0]
+    with open('../json_files/query_misses.json', ensure_ascii=False) as f:
+        json.dump(query_misses, f)
+
 
 class InvalidInputException(Exception):
     pass
@@ -517,26 +572,27 @@ if __name__ == '__main__':
 
     http = create_http_session(retry_strategy=retry_strategy)
 
-    start_date = datetime.date.fromisoformat('1980-01-02')
-    end_date = datetime.date.today()
-    misses = []
+    update_mongo()
+    # start_date = datetime.date.fromisoformat('1980-01-02')
+    # end_date = datetime.date.today()
+    # misses = []
 
-    data = build_dataset(historical_data=None,
-                         start_date=start_date,
-                         end_date=end_date,
-                         spotify_client=spotify,
-                         http_session=http,
-                         refresh=True,
-                         debug=True,
-                         record_misses_list=misses,
-                         top_k=50,
-                         day_of_the_week=2)
-    save_dataset_as_json(data,
-                        indent=None,
-                        mongodb=False)
+    # data = build_dataset(historical_data=None,
+    #                      start_date=start_date,
+    #                      end_date=end_date,
+    #                      spotify_client=spotify,
+    #                      http_session=http,
+    #                      refresh=True,
+    #                      debug=True,
+    #                      record_misses_list=misses,
+    #                      top_k=50,
+    #                      day_of_the_week=2)
+    # save_dataset_as_json(data,
+    #                     indent=None,
+    #                     mongodb=False)
     
-    uris = get_unique_uris(data)
-    spotify_info_dict = get_spotify_info(uris=uris,
-                                         artist_info=True,
-                                         audio_features=True)
-    save_spotify_info_as_json(spotify_info_dict, mongodb=True)
+    # uris = get_unique_uris(data)
+    # spotify_info_dict = get_spotify_info(uris=uris,
+    #                                      artist_info=True,
+    #                                      audio_features=True)
+    # save_spotify_info_as_json(spotify_info_dict, mongodb=True)
