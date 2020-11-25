@@ -4,7 +4,7 @@ import { fromJS, Map } from 'immutable';
 import { createSelector } from 'reselect';
 
 import { getTop50 }  from '../services/mongodb';
-
+import { adjustDate, dateString } from '../concepts/calendar';
 // # Action Types
 const CLEAR_TOP_50 = 'history/CLEAR_TOP_50';
 const FETCH_TOP_50_SUCCESS = 'history/FETCH_TOP_50_SUCCESS';
@@ -51,7 +51,7 @@ export const setDate = date => (
 // # Reducer
 const initialState = fromJS({
   tracks: {},
-  date: '2020-11-18',
+  date: dateString(adjustDate(new Date())),
   isLoading: false,
 });
 
