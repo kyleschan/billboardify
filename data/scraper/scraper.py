@@ -21,6 +21,16 @@ QUOTES = r'\"[^)]*\"'
 
 
 def create_http_session(retry_strategy: Retry = None) -> requests.Session:
+    """Creates an HTTP client session for web scraping.
+
+    Args:
+        retry_strategy (Retry): Retry strategy in case session is rate limited
+            (429 error)
+
+    Returns:
+        requests.Session: The HTTP session equipped with retry_strategy
+
+    """
     adapter = HTTPAdapter(max_retries=retry_strategy)
     session = requests.Session()
     session.mount("https://", adapter)
@@ -32,7 +42,25 @@ def _get_track_info(session: requests.Session,
                     date: str = None,
                     lower_bound: int = 0,
                     upper_bound: int = 50) -> tuple:
-    
+    """Gets raw track and artist names for the given date from Billboard.
+
+    Args:
+        session (requests.Session): The HTTP session used to send GET requests
+            to Billboard.
+        date (str): An ISO-formatted (YYYY-MM-DD) date string. Defaults to None.
+        lower_bound (int): The lower bound of the slice of the Billboard Hot 100.
+            Defaults to 0.
+        upper_bound (int): The upper bound of the slice of the Billboard Hot 100.
+            Defaults to 50.
+
+    Returns:
+        tuple: A 2-arg tuple where the first arg is a list of the track title
+            strings and the second arg is a list of the corresponding track artist
+            name strings.  The ranking order is preserved.
+
+    Raises:
+        InvalidInputException: If the bounds are out of range (Must be in [0, 100]).
+    """
     # Interval must be in [0, 100]
     if (lower_bound < 0 or
         upper_bound > 100 or
@@ -63,6 +91,15 @@ def _get_track_info(session: requests.Session,
 
 
 def _clean_title_name(name: str) -> str:
+    """Processes track title name to increase Spotify search success rate.
+
+    Args:
+        name (str): The raw track title name.
+
+    Returns:
+        str: The processed track title name.
+
+    """
     name = name.replace("'", "") \
                .split('/', maxsplit=1)[0]
     
@@ -76,6 +113,15 @@ def _clean_title_name(name: str) -> str:
 
 
 def _clean_artist_name(name: str) -> str:
+    """Processes track artist name to increase Spotify search success rate.
+
+    Args:
+        name (str): The raw track artist name.
+
+    Returns:
+        str: The processed track artist name.
+
+    """
     name = name.replace(' Featuring', '') \
                .replace(' X ', ' ') \
                .replace(' x', '') \
@@ -102,8 +148,40 @@ def _get_track_uris(titles: list,
                     spotify_client: spotipy.Spotify,
                     prev_week: str = None,
                     debug: bool = False,
-                    record_misses_list: list = None) -> tuple:
+                    record_misses_list: list = None,
+                    day_of_the_week: int = 2) -> tuple:
+    """Gets Spotify track URIs from track titles and artists.
 
+    Args:
+        titles (list): A list of track titles (preferably cleaned) for
+            Spotify search querying.
+        artists (list): A list of track artists (preferably cleaned) for
+            Spotify search querying.
+        historical_data: A dict with the same form as that returned by
+            build_dataset.  It is used as a cache where the previous week's
+            data is used if possible to prevent unnecessary expensive
+            queries to Spotify.
+        spotify_client (spotipy.Spotify): A Spotify client session used for
+            accessing Spotify's Web API.
+        prev_week (str): An ISO-formatted (YYYY-MM-DD) date string of the
+            previous week. Defaults to None.
+        debug (bool): If True, prints missed queries. Defaults to False.
+        record_misses_list (list): A list where the query misses are
+            recorded. Defaults to None.
+        day_of_the_week (int): Indicates the Python day of the week
+            (Ex. 0 is Monday, 1 is Tuesday, ..., 6 is Sunday). Defaults
+            to 2 (Wednesday).
+
+    Returns:
+        tuple: A 2-arg tuple where the first arg is a list of the search
+            query strings and the second arg is a list of the
+            corresponding uri strings.  The ranking order is preserved.
+            An unsuccessful query will have uri = None.
+
+    Raises:
+        InvalidInputException: If historical_data is given in an invalid
+            format.
+    """
     # Historical data must be a valid dataset
     if len(historical_data) > 0 and not valid_dataset(historical_data):
         print('Historical data must be a valid dataset')
@@ -144,8 +222,10 @@ def _get_track_uris(titles: list,
                     if record_misses_list is not None:
                         prev_misses = [item[-1] for item in record_misses_list]
                         if query not in prev_misses:
-                            current_week = str(datetime.date.fromisoformat(prev_week)
-                                               + datetime.timedelta(weeks=1))
+                            current_week = datetime.date.today()
+                            current_day = current_week.weekday()
+                            if current_day != day_of_the_week:
+                                current_week += datetime.timedelta(days=day_of_the_week - current_day)
                             record_misses_list.append((i, current_week, query))
                     if debug:
                         print(i, new_query)
@@ -165,8 +245,45 @@ def build_dataset(start_date: datetime.date,
                   debug: bool = False,
                   record_misses_list: list = None,
                   top_k: int = 50,
-                  day_of_the_week: int = None) -> dict:
-    
+                  day_of_the_week: int = 2) -> dict:
+    """Builds a dataset of weekly Billboard charts.
+
+    Args:
+        start_date (datetime.date): Indicates the starting week for the
+            dataset (inclusive).
+        start_date (datetime.date): Indicates the ending week for the
+            dataset (inclusive).
+        spotify_client (spotipy.Spotify): A Spotify client session used for
+            accessing Spotify's Web API.
+        http_session (requests.Session): The HTTP session used to send GET
+            requests to Billboard.
+        historical_data: A dict with the same form as that returned by
+            build_dataset.  It is used as a cache where the previous week's
+            data is used if possible to prevent unnecessary expensive
+            queries to Spotify.  Defaults to None.
+        refresh (bool): If True, indicates that historical_data should be
+            updated.  Defaults to True.
+        debug (bool): If True, prints missed queries and finished dates.
+            Defaults to False.
+        record_misses_list (list): A list where the query misses are
+            recorded. Defaults to None.
+        top_k (int): Each week in the dataset will have the top_k of the
+            Billboard Hot 100. Defaults to 50.
+        day_of_the_week (int): Indicates the Python day of the week
+            (Ex. 0 is Monday, 1 is Tuesday, ..., 6 is Sunday). Defaults
+            to 2 (Wednesday).
+
+    Returns:
+        dict: Keys are ISO dates (YYYY-MM-DD) indicating the week of the
+            chart and values are dicts of the form: {'title': title,
+                                                     'artist': artist,
+                                                     'query': query,
+                                                     'uri': uri} .
+
+    Raises:
+        InvalidInputException: If historical_data is given in an invalid
+            format, or if start_date and/or end_date are invalid.
+    """
     dataset = historical_data if historical_data is not None else {}
     # Historical data must be a valid dataset
     if len(dataset) > 0 and not valid_dataset(dataset):
@@ -235,7 +352,8 @@ def build_dataset(start_date: datetime.date,
                                         spotify_client,
                                         prev_week=prev_week,
                                         debug=debug,
-                                        record_misses_list=record_misses_list)
+                                        record_misses_list=record_misses_list,
+                                        day_of_the_week=day_of_the_week)
         dataset[date] = [{'title': title,
                           'artist': artist,
                           'query': query,
@@ -246,9 +364,25 @@ def build_dataset(start_date: datetime.date,
 
     return dataset
 
+def get_mongo_dataset(dataset: dict) -> list:
+    """Preps a dataset of weekly Billboard charts for MongoDB upload.
 
-def get_mongo_dataset(dataset: dict) -> dict:
-    
+    Args:
+        dataset (dict): A dict with the same form as that returned by
+            build_dataset.
+
+    Returns:
+        list: A list of dicts for each week in dataset. Keys of each
+            dict are ISO dates (YYYY-MM-DD) indicating the week of the
+            chart and values are dicts of the form: 
+            {'_id': date,
+             'ranking': dataset[date]}.  For MongoDB, each document is
+             required to have a unique '_id' field.
+
+    Raises:
+        InvalidInputException: If dataset is given in an invalid
+            format.
+    """
     # Dataset must be valid
     if not valid_dataset(dataset):
         raise InvalidInputException
@@ -260,8 +394,26 @@ def get_mongo_dataset(dataset: dict) -> dict:
              in dataset]
 
 
-def get_mongo_spotify_info(spotify_info_dict: dict) -> dict:
-    
+def get_mongo_spotify_info(spotify_info_dict: dict) -> list:
+    """Preps a dict with Spotify track info for MongoDB upload.
+
+    Args:
+        spotify_info_dict (dict): A dict with the same form as that
+            returned by get_spotify_info.
+
+    Returns:
+        list: A list of dicts for each uri in spotify_info_dict.
+            Keys of each dict are Spotify URIs
+            (Ex. "spotify:track:0SErdEdRcVX1uJCf1eTGYH") and values
+            are dicts of the form: 
+            {'_id': uri,
+             **spotify_info_dict[uri]}.  For MongoDB, each document is
+             required to have a unique '_id' field.
+
+    Raises:
+        InvalidInputException: If spotify_info_dict is given in an
+            invalid format.
+    """
     # Spotify info must be valid
     if not valid_spotify_info(spotify_info_dict):
         raise InvalidInputException
@@ -275,7 +427,24 @@ def save_dataset_as_json(dataset: dict,
                          path: str = os.getcwd(),
                          indent: int = None,
                          mongodb: bool = False) -> None:
-    
+    """Saves a dataset of weekly Billboard charts as a JSON file.
+
+    Args:
+        dataset (dict): A dict with the same form as that returned by
+            build_dataset.
+        path (str): A path string (or path-like object) indicating where
+            the user would like to save the JSON file.  Defaults to
+            os.getcwd(), which is the current working directory.
+        indent (int): The number of spaces to indent the JSON (Ex.
+            4 is typically used for JSON pretty printing). Defaults
+            to None.
+        mongodb (bool): If True, applies get_mongo_dataset to dataset
+            before saving. Defaults to False.
+
+    Raises:
+        InvalidInputException: If dataset is given in an invalid
+            format.
+    """
     # Dataset must be valid
     if not valid_dataset(dataset):
         raise InvalidInputException
@@ -315,7 +484,24 @@ def save_spotify_info_as_json(spotify_info_dict: dict,
                               path: str = os.getcwd(),
                               indent: int = None,
                               mongodb: bool = False) -> None:
+    """Saves a dataset of weekly Billboard charts as a JSON file.
 
+    Args:
+        spotify_info_dict (dict): A dict with the same form as that
+            returned by get_spotify_info.
+        path (str): A path string (or path-like object) indicating where
+            the user would like to save the JSON file.  Defaults to
+            os.getcwd(), which is the current working directory.
+        indent (int): The number of spaces to indent the JSON (Ex.
+            4 is typically used for JSON pretty printing). Defaults
+            to None.
+        mongodb (bool): If True, applies get_mongo_spotify_info to
+            spotify_info_dict before saving. Defaults to False.
+
+    Raises:
+        InvalidInputException: If spotify_info_dict is given in an invalid
+            format.
+    """
     # Spotify info must be valid
     if not valid_spotify_info(spotify_info_dict):
         raise InvalidInputException
@@ -347,7 +533,22 @@ def save_spotify_info_as_json(spotify_info_dict: dict,
 def manual_add_uri(dataset: dict,
                    uri: str = None,
                    query: str = None) -> None:
-    
+    """Updates dataset by adding uri to dataset at query.
+
+    Args:
+        dataset (dict): A dict with the same form as that returned by
+            build_dataset.
+        uri (str): Spotify URI string
+            (Ex. "spotify:track:0SErdEdRcVX1uJCf1eTGYH") that the
+            user would like to add to dataset.
+        query (str): Spotify query string
+            (Ex. "track:Rock With You artist:Michael Jackson") that
+            the user would like to update with uri.
+
+    Raises:
+        InvalidInputException: If dataset is given in an invalid
+            format.
+    """
     # Dataset must be valid
     if not valid_dataset(dataset):
         raise InvalidInputException
@@ -361,7 +562,21 @@ def manual_add_uri(dataset: dict,
                 
 def manual_add_uris(dataset: dict,
                     uri_dict: dict = None) -> None:
-    
+    """Updates dataset by adding all uris in uri_dict to dataset.
+
+    Args:
+        dataset (dict): A dict with the same form as that returned by
+            build_dataset.
+        uri_dict (dict): Dict where keys are Spotify query strings
+            (Ex. "track:Rock With You artist:Michael Jackson") and
+            values are Spotify URI strings
+            (Ex. "spotify:track:0SErdEdRcVX1uJCf1eTGYH") that the
+            user would like to add to dataset.
+
+    Raises:
+        InvalidInputException: If dataset is given in an invalid
+            format.
+    """
     # Dataset must be valid and uris must be in dict
     if not (valid_dataset(dataset) and isinstance(uri_dict, dict)):
         raise InvalidInputException
@@ -374,7 +589,18 @@ def manual_add_uris(dataset: dict,
         
 
 def get_unique_uris(dataset: dict) -> set:
+    """Returns the set of all unique uris in dataset.
 
+    Args:
+        dataset (dict): A dict with the same form as that returned by
+            build_dataset.
+
+    Returns:
+        set: The set of all unique uris in dataset.
+    Raises:
+        InvalidInputException: If dataset is given in an invalid
+            format.
+    """
     # Dataset must be valid
     if not valid_dataset(dataset):
         raise InvalidInputException
@@ -385,7 +611,30 @@ def get_unique_uris(dataset: dict) -> set:
 def get_spotify_info(uris: set,
                      artist_info: bool = False,
                      audio_features: bool = False) -> dict:
-    
+    """Gets Spotify track info associated with uris.
+
+    Args:
+        uris (set): A set of uris the user would like to get Spotify
+            info for.
+        artist_info (bool): If True, adds Spotify artist info
+            corresponding to uris. Defaults to False.
+        artist_info (bool): If True, adds Spotify audio features
+            corresponding to uris. Defaults to False.
+
+    Returns: dict: Dict where keys are Spotify URI strings
+            (Ex. "spotify:track:0SErdEdRcVX1uJCf1eTGYH") and values
+             are dicts with requested info.  Assuming all info is
+             requested, each uri corresponds to a dict of the form:
+             {'track_info': spotify.track(uri)
+              'audio_features': spotify.audio_features(uri)[0]
+              'artist_info': spotify.artist(artist_uri)}.
+            See Spotipy docs for more info:
+            https://spotipy.readthedocs.io/en/2.9.0/#api-reference
+
+    Raises:
+        InvalidInputException: If any uri in uris is given in an
+            invalid format.
+    """
     # Verify that uris are valid
     if not valid_uris(uris):
         raise InvalidInputException
@@ -409,8 +658,30 @@ def get_spotify_info(uris: set,
 def add_spotify_info_inline(dataset: dict,
                             uris: set = None,
                             spotify_info_dict: dict = None,
+                            artist_info: bool = False,
                             audio_features: bool = False) -> None:
+    """Updates dataset by adding Spotify info directly into dataset.
+       WARNING: If storing locally, such datasets are typically quite
+           large.
 
+    Args:
+        dataset (dict): A dict with the same form as that returned by
+            build_dataset.
+        uris (set): Set of uris that the user would like to add info
+            for. If None, all unique uris in the dataset are queried
+            for info. Defaults to None.
+        spotify_info_dict (dict): A dict with the same form as that
+            returned by get_spotify_info containing the info the user
+            would like to add. If None, a dict is created from uris.
+            Defaults to None.
+        artist_info (bool): If True, adds Spotify artist info
+            corresponding to uris. Defaults to False.
+        artist_info (bool): If True, adds Spotify audio features
+            corresponding to uris. Defaults to False.
+    Raises:
+        InvalidInputException: If dataset, spotify_info_dict, or uris
+            are given in an invalid format.
+    """
     # Inputs must be valid
     if not (valid_dataset(dataset) and
             valid_spotify_info(spotify_info_dict) and
@@ -421,14 +692,28 @@ def add_spotify_info_inline(dataset: dict,
     if not uris:
         uris = get_unique_uris(dataset)
     if not spotify_info_dict:
-        spotify_info_dict = get_spotify_info(uris, audio_features=audio_features)
+        spotify_info_dict = get_spotify_info(uris,
+                                             audio_features=audio_features,
+                                             artist_info=artist_info)
     for date in dataset:
         for item in dataset[date]:
             item['spotify_info'] = spotify_info_dict[item['uri']] if item['uri'] else None
             
 
 def valid_uris(uris: set, uri_type: str = 'track') -> bool:
+    """Checks if given uris are valid.  In this case, valid means
+       each uri is of the form: f"spotify:{uri_type}:{id_string}".
 
+    Args:
+        uris (set): Set of uris that the user would like to check
+            for validity.
+        uri_type (str): The type of uri the user would like to check
+            (Ex. 'track', 'artist', 'album', etc.).
+            Defaults to 'track'.
+
+    Returns:
+        bool: True if all uris are valid, else False.
+    """
     # Uris must be iterable
     try:
         iterator = iter(uris)
@@ -452,7 +737,18 @@ def valid_uris(uris: set, uri_type: str = 'track') -> bool:
 
 
 def valid_dataset(dataset: dict) -> bool:
-    
+    """Checks if given dataset valid.  In this case, valid means
+           keys must be ISO formatted dates (YYYY-MM-DD), and each
+           item in each ranking must be a dict with the following
+           required keys: 'title', 'artist', 'query', 'uri'.
+
+    Args:
+        dataset (dict): A dict with the same form as that returned by
+            build_dataset.
+
+    Returns:
+        bool: True if all items in the dataset are valid, else False.
+    """
     # Dataset must be a dict
     if not isinstance(dataset, dict):
         return False
@@ -484,27 +780,60 @@ def valid_dataset(dataset: dict) -> bool:
 
 
 def valid_spotify_info(spotify_info_dict: dict) -> bool:
+    """Checks if given spotify_info_dict.  In this case, valid means
+           keys must be valid Spotify track URIs
+           (Ex. f"spotify:track:{id_string}"), and each
+           value must be a dict with the following
+           required keys: 'track_info'.
 
+    Args:
+        dataset (dict): A dict with the same form as that returned by
+            build_dataset.
+
+    Returns:
+        bool: True if all items in spotify_info_dict are valid,
+            else False.
+    """
     # Dataset must be a dict
     if not isinstance(spotify_info_dict, dict):
         print(f'Item {spotify_info_dict} is not a dict')
         return False
     
-    # Keys must be valid uris and values must be dicts
+    # Keys must be valid uris and values must be dicts with key
+    # 'track_info'
     for uri in spotify_info_dict:
         uri_parts = uri.split(':')
         if uri_parts[0] != 'spotify' or uri_parts[1] != 'track':
             print(f'Invalid uri {uri}')
             return False
-        if not isinstance(spotify_info_dict[uri], dict):
-            print(f'Item {spotify_info_dict[uri]} is not a dict')
+        
+        uri_dict = spotify_info_dict[uri]
+        if not isinstance(uri_dict, dict) and
+           'track_info' not in uri_dict:
+            print(f'Item {uri_dict} is not a valid dict')
             return False
         
     # Passed all checks; valid spotify info
     return True
 
 def update_mongo():
+    """Updates MongoDB Atlas Cluster with the latest Billboard info.
+       Assumes the MongoDB database is named 'data', and there are
+       *two* collections in 'data' called 'billboard_rankings' and
+       'spotify_info'.  Further assumes that the MongoDB Atlas
+       connection string is stored as environment variable
+       ATLAS_CONNECT
 
+    Raises:
+        pymongo.errors.InvalidName: If a db or collection name is
+            not found.
+        pymongo.errors.DuplicateKeyError: If the function tries to
+            add a document with a duplicate '_id' field to a
+            collection.
+        pymongo.errors.ConnectionFailure: If a connection can't be
+            established with MongoDB Atlas (typically due to an
+            invalid connection string).
+    """
     # Get latest week's Top 50
     misses = []
     new_data = build_dataset(historical_data=None,
@@ -527,12 +856,10 @@ def update_mongo():
     new_uris = get_unique_uris(new_data)
 
     # Determine which uris are new
-    with open('../json_files/unique_uris.pickle', 'rb') as f:
+    with open(os.path.join(os.getcwd(), '..', 'json-files', 'unique_uris.pickle'), 'rb') as f:
         uris = pickle.load(f)
     input_uris = new_uris - uris
     uris = uris | input_uris
-    with open('../json_files/unique_uris.pickle', 'wb') as f:
-        pickle.dump(uris, f)
 
     # Get info for those new uris and prep for mongodb upload
     new_spotify_info = get_spotify_info(input_uris,
@@ -542,7 +869,7 @@ def update_mongo():
     mongo_new_spotify_info = get_mongo_spotify_info(new_spotify_info)
 
     # Upload results to mongodb
-    client = MongoClient('CONNECTION STRING HERE')
+    client = MongoClient(os.environ['ATLAS_CONNECT'])
     db = client.data
     spotify_info = db.spotify_info
     billboard_rankings = db.billboard_rankings
@@ -550,11 +877,14 @@ def update_mongo():
     billboard_rankings.insert_one(mongo_new_data)
 
     # Update and save query misses
-    with open('../json_files/query_misses.json') as f:
-        query_misses = json.load(f)
+    with open(os.path.join(os.getcwd(), '..', 'json-files', 'query_misses.pickle'), 'rb') as f:
+        query_misses = pickle.load(f)
     query_misses += misses[0]
-    with open('../json_files/query_misses.json', ensure_ascii=False) as f:
-        json.dump(query_misses, f)
+    with open(os.path.join(os.getcwd(), '..', 'json-files', 'query_misses.pickle'), 'wb') as f:
+        pickle.dump(query_misses, f)
+        
+    with open(os.path.join(os.getcwd(), '..', 'json-files', 'unique_uris.pickle'), 'wb') as f:
+        pickle.dump(uris, f)
 
 
 class InvalidInputException(Exception):
