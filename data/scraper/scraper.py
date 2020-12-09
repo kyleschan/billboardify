@@ -873,15 +873,17 @@ def update_mongo():
     db = client.data
     spotify_info = db.spotify_info
     billboard_rankings = db.billboard_rankings
-    spotify_info.insert_many(get_mongo_spotify_info(new_spotify_info))
+    if len(mongo_new_spotify_info) > 0:
+        spotify_info.insert_many(mongo_new_spotify_info)
     billboard_rankings.insert_one(mongo_new_data)
 
     # Update and save query misses
-    with open(os.path.join(os.getcwd(), '..', 'json-files', 'query_misses.pickle'), 'rb') as f:
-        query_misses = pickle.load(f)
-    query_misses += misses[0]
-    with open(os.path.join(os.getcwd(), '..', 'json-files', 'query_misses.pickle'), 'wb') as f:
-        pickle.dump(query_misses, f)
+    if len(misses) > 0:
+        with open(os.path.join(os.getcwd(), '..', 'json-files', 'query_misses.pickle'), 'rb') as f:
+            query_misses = pickle.load(f)
+        query_misses += misses[0]
+        with open(os.path.join(os.getcwd(), '..', 'json-files', 'query_misses.pickle'), 'wb') as f:
+            pickle.dump(query_misses, f)
         
     with open(os.path.join(os.getcwd(), '..', 'json-files', 'unique_uris.pickle'), 'wb') as f:
         pickle.dump(uris, f)
