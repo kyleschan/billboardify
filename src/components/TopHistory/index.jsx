@@ -25,6 +25,7 @@ const TopHistory = ({
         <Calendar onSelection={updateCurrentDate}/>
         {topHistory
           .get('tracks')
+          .filter(Boolean)
           .map((track, index) => (
             <TopHistoryTrack
               orderNumber={index + 1}
