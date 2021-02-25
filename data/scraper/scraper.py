@@ -7,7 +7,7 @@ import pickle
 import re
 import requests
 from requests.adapters import HTTPAdapter
-from requests.packages.urllib3.util.retry import Retry
+from urllib3.util import Retry
 
 # Third-party imports
 from lxml import html
@@ -808,8 +808,8 @@ def valid_spotify_info(spotify_info_dict: dict) -> bool:
             return False
         
         uri_dict = spotify_info_dict[uri]
-        if not isinstance(uri_dict, dict) and
-           'track_info' not in uri_dict:
+        if (not isinstance(uri_dict, dict) and
+           'track_info' not in uri_dict):
             print(f'Item {uri_dict} is not a valid dict')
             return False
         
@@ -874,7 +874,11 @@ def update_mongo():
     spotify_info = db.spotify_info
     billboard_rankings = db.billboard_rankings
     if len(mongo_new_spotify_info) > 0:
-        spotify_info.insert_many(mongo_new_spotify_info)
+        for item in mongo_new_spotify_info:
+            try:
+                spotify_info.insert_one(item)
+            except DuplicateKeyError as e:
+                pass
     billboard_rankings.insert_one(mongo_new_data)
 
     # Update and save query misses
